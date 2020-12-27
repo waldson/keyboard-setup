@@ -14,7 +14,10 @@ This setup will:
     2. `cmake -DCMAKE_BUILD_TYPE=Release ..`
     3. `make`
     4. `sudo make install`
-4. Copy `dual-function-keys.yaml`  `/etc/dual-function-keys.yaml`
-5. Copy `udevmon.yaml` to `/etc/udevmon.yaml`
-6. Copy `udevmon.service` to `/etc/systemd/system/udevmon.service`
+4. Copy `config-files/dual-function-keys.yaml` to  `/etc/dual-function-keys.yaml`
+5. Copy `config-files/udevmon.yaml` to `/etc/udevmon.yaml`
+6. Copy `config-files/udevmon.service` to `/etc/systemd/system/udevmon.service`
 7. Enable service: `sudo systemctl enable --now udevmon.service`
+
+## TO-DO
+* [ ] Create an installation script
