@@ -83,6 +83,30 @@ typedef struct mapping {
 
 const mapping mappings[] = {
     {
+        .from = {.code = KEY_F1, .modifiers = {.alt = RIGHT}},
+        .to = {.code = KEY_MUTE, .modifiers = {}},
+    },
+    {
+        .from = {.code = KEY_F2, .modifiers = {.alt = RIGHT}},
+        .to = {.code = KEY_VOLUMEDOWN, .modifiers = {}},
+    },
+    {
+        .from = {.code = KEY_F3, .modifiers = {.alt = RIGHT}},
+        .to = {.code = KEY_VOLUMEUP, .modifiers = {}},
+    },
+    {
+        .from = {.code = KEY_F4, .modifiers = {.alt = RIGHT}},
+        .to = {.code = KEY_PREVIOUSSONG, .modifiers = {}},
+    },
+    {
+        .from = {.code = KEY_F5, .modifiers = {.alt = RIGHT}},
+        .to = {.code = KEY_PLAYPAUSE, .modifiers = {}},
+    },
+    {
+        .from = {.code = KEY_F6, .modifiers = {.alt = RIGHT}},
+        .to = {.code = KEY_NEXTSONG, .modifiers = {}},
+    },
+    {
         .from = {.code = KEY_BACKSLASH, .modifiers = {.alt = LEFT}},
         .to = {.code = KEY_102ND, .modifiers = {}},
     },
