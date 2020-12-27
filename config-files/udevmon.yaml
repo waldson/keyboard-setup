@@ -1,0 +1,4 @@
+- JOB: "intercept -g $DEVNODE | w5n-keymappings | dual-function-keys -c /etc/dual-function-keys.yaml | uinput -d $DEVNODE"
+  DEVICE:
+    EVENTS:
+      EV_KEY: [KEY_CAPSLOCK, KEY_Z, KEY_RIGHTSHIFT, KEY_BACKSLASH]
