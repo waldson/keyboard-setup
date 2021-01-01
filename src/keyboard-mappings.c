@@ -130,6 +130,31 @@ const mapping mappings[] = {
         .from = {.code = KEY_RIGHTSHIFT, .modifiers = {.shift = LEFT}},
         .to = {.code = KEY_RO, .modifiers = {.shift = LEFT}},
     },
+    // Navigation Keys
+    {
+        .from = {.code = KEY_A, .modifiers = {.alt = RIGHT}},
+        .to = {.code = KEY_LEFT, .modifiers = {}},
+    },
+    {
+        .from = {.code = KEY_S, .modifiers = {.alt = RIGHT}},
+        .to = {.code = KEY_DOWN, .modifiers = {}},
+    },
+    {
+        .from = {.code = KEY_D, .modifiers = {.alt = RIGHT}},
+        .to = {.code = KEY_RIGHT, .modifiers = {}},
+    },
+    {
+        .from = {.code = KEY_W, .modifiers = {.alt = RIGHT}},
+        .to = {.code = KEY_UP, .modifiers = {}},
+    },
+    {
+        .from = {.code = KEY_H, .modifiers = {.alt = RIGHT}},
+        .to = {.code = KEY_HOME, .modifiers = {}},
+    },
+    {
+        .from = {.code = KEY_L, .modifiers = {.alt = RIGHT}},
+        .to = {.code = KEY_END, .modifiers = {}},
+    },
 };
 
 // TODO: make Home/End work in Kitty although I probably won't use them.
