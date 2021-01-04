@@ -19,7 +19,9 @@ This setup will:
     3. `AltGr+d`:  Right
     4. `AltGr+w`: Up
     5. `AltGr+h`: Home
-    6. `AltGr+l`: End
+    6. `AltGr+j`: Page Down
+    7. `AltGr+k`: Page Up
+    8. `AltGr+l`: End
 
 ## Setup
 

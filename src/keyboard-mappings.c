@@ -155,6 +155,14 @@ const mapping mappings[] = {
         .from = {.code = KEY_L, .modifiers = {.alt = RIGHT}},
         .to = {.code = KEY_END, .modifiers = {}},
     },
+    {
+        .from = {.code = KEY_J, .modifiers = {.alt = RIGHT}},
+        .to = {.code = KEY_PAGEDOWN, .modifiers = {}},
+    },
+    {
+        .from = {.code = KEY_K, .modifiers = {.alt = RIGHT}},
+        .to = {.code = KEY_PAGEUP, .modifiers = {}},
+    },
 };
 
 // TODO: make Home/End work in Kitty although I probably won't use them.
