@@ -1,18 +1,19 @@
 #include <assert.h>
+#include <linux/input.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <linux/input.h>
 #include <unistd.h>
 
 // From: https://raw.githubusercontent.com/wincent/wincent/master/aspects/interception/support/mac2linux.c
+// /usr/include/linux/input-event-codes.h
 
 #define EV_DOWN 1
 #define EV_UP 0
 #define EV_REPEAT 2
 
-
-typedef enum {
+typedef enum
+{
     UP = 0,
     DOWN = 1,
 } key_state;
@@ -20,7 +21,8 @@ typedef enum {
 /**
  * Reflects UP/DOWN state of distinct modifier keys.
  */
-typedef struct modifier_state {
+typedef struct modifier_state
+{
     key_state l_alt : 1;
     key_state l_ctrl : 1;
     key_state l_meta : 1;
@@ -31,7 +33,8 @@ typedef struct modifier_state {
     key_state r_shift : 1;
 } modifier_state;
 
-typedef enum {
+typedef enum
+{
     NEITHER = 0,
     LEFT = 1,
     RIGHT = 2,
@@ -64,19 +67,22 @@ __u16 active_remappings[KEY_MAX] = {0};
  * Specifies required modifier combination in order to match or generate a
  * keyboard event.
  */
-typedef struct modifier_spec {
-    modifier_req alt: 3;
-    modifier_req ctrl: 3;
-    modifier_req meta: 3;
-    modifier_req shift: 3;
+typedef struct modifier_spec
+{
+    modifier_req alt : 3;
+    modifier_req ctrl : 3;
+    modifier_req meta : 3;
+    modifier_req shift : 3;
 } modifier_spec;
 
-typedef struct key_combination {
+typedef struct key_combination
+{
     __u16 code;
     modifier_spec modifiers;
 } key_combination;
 
-typedef struct mapping {
+typedef struct mapping
+{
     key_combination from;
     key_combination to;
 } mapping;
@@ -163,11 +169,44 @@ const mapping mappings[] = {
         .from = {.code = KEY_K, .modifiers = {.alt = RIGHT}},
         .to = {.code = KEY_PAGEUP, .modifiers = {}},
     },
+    {
+        .from = {.code = KEY_H, .modifiers = {.alt = LEFT, .ctrl = LEFT}},
+        .to = {.code = KEY_LEFT, .modifiers = {}},
+    },
+    {
+        .from = {.code = KEY_L, .modifiers = {.alt = LEFT, .ctrl = LEFT}},
+        .to = {.code = KEY_RIGHT, .modifiers = {}},
+    },
+    {
+        .from = {.code = KEY_K, .modifiers = {.alt = LEFT, .ctrl = LEFT}},
+        .to = {.code = KEY_UP, .modifiers = {}},
+    },
+    {
+        .from = {.code = KEY_J, .modifiers = {.alt = LEFT, .ctrl = LEFT}},
+        .to = {.code = KEY_DOWN, .modifiers = {}},
+    },
+    {
+        .from = {.code = KEY_H, .modifiers = {.alt = LEFT, .ctrl = LEFT, .shift=LEFT}},
+        .to = {.code = KEY_LEFT, .modifiers = {.ctrl = LEFT}},
+    },
+    {
+        .from = {.code = KEY_L, .modifiers = {.alt = LEFT, .ctrl = LEFT, .shift=LEFT}},
+        .to = {.code = KEY_RIGHT, .modifiers = {.ctrl = LEFT}},
+    },
+    {
+        .from = {.code = KEY_K, .modifiers = {.alt = LEFT, .ctrl = LEFT, .shift=LEFT}},
+        .to = {.code = KEY_UP, .modifiers = {.ctrl = LEFT}},
+    },
+    {
+        .from = {.code = KEY_J, .modifiers = {.alt = LEFT, .ctrl = LEFT, .shift=LEFT}},
+        .to = {.code = KEY_DOWN, .modifiers = {.ctrl = LEFT}},
+    },
 };
 
 // TODO: make Home/End work in Kitty although I probably won't use them.
 
-void write_event(const struct input_event *event) {
+void write_event(const struct input_event* event)
+{
     if (fwrite(event, sizeof(struct input_event), 1, stdout) != 1) {
         exit(EXIT_FAILURE);
     }
@@ -195,16 +234,17 @@ void write_event(const struct input_event *event) {
     }
 }
 
-void write_key(__u16 code, __s32 value) {
+void write_key(__u16 code, __s32 value)
+{
     const struct input_event event = {
         .type = EV_KEY,
         .code = code,
-        .value = value
-    };
+        .value = value};
     write_event(&event);
 }
 
-bool is_modifier(const struct input_event *event) {
+bool is_modifier(const struct input_event* event)
+{
     return (
         event->code == KEY_LEFTALT ||
         event->code == KEY_LEFTCTRL ||
@@ -213,8 +253,7 @@ bool is_modifier(const struct input_event *event) {
         event->code == KEY_RIGHTALT ||
         event->code == KEY_RIGHTCTRL ||
         event->code == KEY_RIGHTMETA ||
-        event->code == KEY_RIGHTSHIFT
-    );
+        event->code == KEY_RIGHTSHIFT);
 }
 
 /**
@@ -224,7 +263,8 @@ bool is_modifier(const struct input_event *event) {
  * Returns `true` if a transition was necessary and `false` if the modifer was
  * already in the desired state.
  */
-bool sync_modifier(__u16 code, __s32 value) {
+bool sync_modifier(__u16 code, __s32 value)
+{
     const key_state desired = value == EV_DOWN ? DOWN : UP;
 
     bool changed = true;
@@ -254,7 +294,8 @@ bool sync_modifier(__u16 code, __s32 value) {
 
 const struct input_event syn = {.type = EV_SYN, .code = SYN_REPORT, .value = 0};
 
-void write_syn() {
+void write_syn()
+{
     write_event(&syn);
     usleep(20000);
 }
@@ -262,7 +303,8 @@ void write_syn() {
 /**
  * Make sure virtual modifier state matches actual hardware state.
  */
-void reset_modifiers() {
+void reset_modifiers()
+{
     bool changed =
         sync_modifier(KEY_LEFTALT, hw_modifier_state.l_alt == UP ? EV_UP : EV_DOWN) |
         sync_modifier(KEY_LEFTCTRL, hw_modifier_state.l_ctrl == UP ? EV_UP : EV_DOWN) |
@@ -278,11 +320,12 @@ void reset_modifiers() {
     }
 }
 
-mapping const *matching_mapping(const struct input_event *event) {
+mapping const* matching_mapping(const struct input_event* event)
+{
     const unsigned int mapping_counts = sizeof(mappings) / sizeof(mappings[0]);
 
     for (unsigned int i = 0; i < mapping_counts; i++) {
-        const struct mapping *mapping = &mappings[i];
+        const struct mapping* mapping = &mappings[i];
 
         if (mapping->from.code == event->code) {
             const modifier_spec modifiers = mapping->from.modifiers;
@@ -310,8 +353,7 @@ mapping const *matching_mapping(const struct input_event *event) {
                 (modifiers.shift == LEFT && (hw_modifier_state.l_shift == UP || hw_modifier_state.r_shift == DOWN)) ||
                 (modifiers.shift == RIGHT && (hw_modifier_state.l_shift == DOWN || hw_modifier_state.r_shift == UP)) ||
                 (modifiers.shift == EITHER && (hw_modifier_state.l_shift == UP && hw_modifier_state.r_shift == UP)) ||
-                (modifiers.shift == BOTH && (hw_modifier_state.l_shift == UP || hw_modifier_state.r_shift == UP))
-            ) {
+                (modifiers.shift == BOTH && (hw_modifier_state.l_shift == UP || hw_modifier_state.r_shift == UP))) {
                 continue;
             }
 
@@ -321,7 +363,8 @@ mapping const *matching_mapping(const struct input_event *event) {
     return NULL;
 }
 
-void dispatch_mapping(const mapping *mapping) {
+void dispatch_mapping(const mapping* mapping)
+{
     const modifier_spec modifiers = mapping->to.modifiers;
 
     bool changed = false;
@@ -447,7 +490,8 @@ void dispatch_mapping(const mapping *mapping) {
     active_remappings[mapping->from.code] = mapping->to.code;
 }
 
-int main(void) {
+int main(void)
+{
     struct input_event event;
 
     // Verify our assumption: we zero-initialize the `active_remappings` array
@@ -509,7 +553,7 @@ int main(void) {
         }
 
         if (event.value == EV_DOWN) {
-            const struct mapping *mapping = matching_mapping(&event);
+            const struct mapping* mapping = matching_mapping(&event);
 
             if (mapping != NULL) {
                 dispatch_mapping(mapping);
